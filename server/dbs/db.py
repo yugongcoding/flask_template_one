@@ -33,10 +33,18 @@ engine_one = create_engine(db_url['data_base_one'], echo=True)
 # 创建虚拟连接  可以创建多个数据库连接对象
 session_one = sessionmaker(bind=engine_one)
 # 创建持久会话  可以创建多个数据库持久化连接会话
+# partial的作用相当于把一个上下文函数编程一个类，这样我们可以通过with语句来操作上下文
+# 使用方法是
+# with session_zs() as session:
+#         print(session_zs)
+#         print(session)
+#         session.query()
 session_zs = partial(create_session, db_session=session_one)
 
 
 if __name__ == '__main__':
+    from server.models.example_model.example_model import User
     with session_zs() as session:
+        data = session.query(User).all()
         print(session_zs)
         print(session)
